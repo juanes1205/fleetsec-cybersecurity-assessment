@@ -5,6 +5,13 @@ const helmet = require("helmet");
 const cors = require("cors");
 const morgan = require("morgan");
 
+const {
+  authenticateToken,
+  authorizeRoles,
+} = require("./middleware/auth.middleware");
+
+const authRoutes = require("./routes/auth.routes");
+
 const app = express();
 
 // Configuración de seguridad HTTP.
@@ -53,6 +60,25 @@ app.get("/health", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+app.use("/api/auth", authRoutes);
+
+// Ruta exclusiva para administradores.
+app.get(
+  "/api/admin/dashboard",
+  authenticateToken,
+  authorizeRoles("admin"),
+  (req, res) => {
+    res.status(200).json({
+      message: "Administrator access granted",
+      user: {
+        id: req.user.id,
+        email: req.user.email,
+        role: req.user.role,
+      },
+    });
+  },
+);
 
 // Respuesta para rutas inexistentes.
 app.use((req, res) => {

@@ -34,3 +34,11 @@ Thumbs.db
 # Base de datos SQLite
 *.db
 *.db-*
+
+# Local databases
+app/data/*.db
+app/data/*.db-shm
+app/data/*.db-wal
+
+# Dependencies
+app/node_modules/
