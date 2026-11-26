@@ -1,0 +1,36 @@
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+
+# Dependencias y builds comunes
+node_modules/
+vendor/
+__pycache__/
+*.pyc
+target/
+dist/
+build/
+coverage/
+
+# OS y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Base de datos SQLite
+*.db
+*.db-*

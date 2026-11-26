@@ -1,39 +1,47 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const helmet = require("helmet");
-const cors = require("cors");
-const morgan = require("morgan");
-
-dotenv.config();
-
-const app = express();
-
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
-app.use(morgan("combined"));
-
-app.get("/health", (req, res) => {
-  res.status(200).json({
-    status: "OK",
-    application: "FleetSec API",
-    timestamp: new Date().toISOString(),
-  });
-});
-
-app.get("/", (req, res) => {
-  res.json({
-    message: "FleetSec Security API",
-    version: "1.0.0",
-  });
-});
+const app = require("./app");
+const { initializeDatabase, db } = require("./database");
+const { seedDatabase } = require("./config/seed");
 
 const PORT = process.env.PORT || 3000;
 
-if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`FleetSec API running on port ${PORT}`);
-  });
+function startServer() {
+  try {
+    // Crear las tablas.
+    initializeDatabase();
+
+    // Cargar datos iniciales cuando esté habilitado.
+    if (process.env.SEED_ON_STARTUP === "true") {
+      seedDatabase();
+    }
+
+    const server = app.listen(PORT, () => {
+      console.log(`FleetSec API running on port ${PORT}`);
+    });
+
+    // Cierre controlado.
+    const shutdown = (signal) => {
+      console.log(`${signal} received. Shutting down...`);
+
+      server.close(() => {
+        db.close();
+        console.log("Database connection closed");
+        process.exit(0);
+      });
+    };
+
+    process.once("SIGINT", () => shutdown("SIGINT"));
+    process.once("SIGTERM", () => shutdown("SIGTERM"));
+
+    return server;
+  } catch (error) {
+    console.error("Application startup failed:", error.message);
+    db.close();
+    process.exitCode = 1;
+  }
 }
 
-module.exports = app;
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = { app, startServer };
