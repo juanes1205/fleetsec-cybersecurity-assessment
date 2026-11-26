@@ -1,0 +1,59 @@
+npm notice run app@1.0.0 test
+npm notice run jest --runInBand
+POST 200 76.618 ms
+POST 200 73.054 ms
+POST 200 65.571 ms
+PASS tests/auth.test.js
+  ● Console
+
+    console.error
+      ◇ injected env (8) from .env
+
+    [0m[31m[1m>[22m[39m[90m 1 |[39m require([32m"dotenv"[39m)[33m.[39mconfig()[33m;[39m
+     [90m   |[39m                   [31m[1m^[22m[39m
+     [90m 2 |[39m
+     [90m 3 |[39m [36mconst[39m express [33m=[39m require([32m"express"[39m)[33m;[39m
+     [90m 4 |[39m [36mconst[39m helmet [33m=[39m require([32m"helmet"[39m)[33m;[39m[0m
+
+      at W (node_modules/dotenv/dist/index.cjs:6:151)
+      at Object.M [as configDotenv] (node_modules/dotenv/dist/index.cjs:6:1119)
+      at Object.Y [as config] (node_modules/dotenv/dist/index.cjs:6:1226)
+      at Object.config (src/app.js:1:19)
+      at Object.require (tests/auth.test.js:7:13)
+
+    console.log
+      Database schema initialized successfully
+
+      at log (src/database.js:68:11)
+
+POST 401 73.444 ms
+GET 200 3.166 ms
+GET 401 0.217 ms
+GET 200 0.582 ms
+GET 403 0.617 ms
+GET 401 0.157 ms
+PASS tests/vapt/v03-ssrf.test.js
+PASS tests/vapt/v02-jwt.test.js
+  ● Console
+
+    console.error
+      ◇ injected env (8) from .env
+
+    [0m[31m[1m>[22m[39m[90m 1 |[39m require([32m"dotenv"[39m)[33m.[39mconfig()[33m;[39m
+     [90m   |[39m                   [31m[1m^[22m[39m
+     [90m 2 |[39m
+     [90m 3 |[39m [36mconst[39m jwt [33m=[39m require([32m"jsonwebtoken"[39m)[33m;[39m
+     [90m 4 |[39m[0m
+
+      at W (node_modules/dotenv/dist/index.cjs:6:151)
+      at Object.M [as configDotenv] (node_modules/dotenv/dist/index.cjs:6:1119)
+      at Object.Y [as config] (node_modules/dotenv/dist/index.cjs:6:1226)
+      at Object.config (tests/vapt/v02-jwt.test.js:1:19)
+
+PASS tests/vapt/v01-sqli.test.js
+
+Test Suites: 4 passed, 4 total
+Tests:       39 passed, 39 total
+Snapshots:   0 total
+Time:        3.727 s
+Ran all test suites.

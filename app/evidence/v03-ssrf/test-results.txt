@@ -1,0 +1,32 @@
+npm notice run app@1.0.0 test
+npm notice run jest --runInBand --runTestsByPath tests/vapt/v03-ssrf.test.js
+PASS tests/vapt/v03-ssrf.test.js
+  V-03 - SSRF (CWE-918)
+    √ debe identificar una IPv4 pública (2 ms)
+    √ debe rechazar una IPv4 privada
+    √ debe rechazar loopback IPv4
+    √ debe rechazar link-local IPv4 (1 ms)
+    √ debe rechazar loopback IPv6 (7 ms)
+    √ debe rechazar IPv6 privada (2 ms)
+    √ debe rechazar IPv6 link-local
+    √ debe rechazar destinos con direcciones DNS no públicas (65 ms)
+    √ secureFetch debe bloquear una conexión cuando DNS resuelve a una IP privada (1 ms)
+    √ secureFetch debe rechazar respuestas HTTP de redirección (1 ms)
+    √ demuestra que la función vulnerable permite acceder a un destino local (21 ms)
+    √ debe rechazar el protocolo HTTP (21 ms)
+    √ debe rechazar localhost (1 ms)
+    √ debe rechazar direcciones IPv4 privadas (1 ms)
+    √ debe rechazar dominios no autorizados
+    √ debe rechazar credenciales incluidas en la URL
+    √ debe rechazar puertos diferentes al 443
+    √ debe rechazar direcciones IPv4 de CGNAT
+    √ debe rechazar direcciones IPv4 multicast (1 ms)
+    √ debe rechazar la dirección IPv4 no especificada
+    √ debe rechazar direcciones IPv4 mapeadas en IPv6 que sean privadas (1 ms)
+    √ debe rechazar direcciones IPv6 reservadas para documentación
+
+Test Suites: 1 passed, 1 total
+Tests:       22 passed, 22 total
+Snapshots:   0 total
+Time:        2.381 s
+Ran all test suites within paths "tests/vapt/v03-ssrf.test.js".
