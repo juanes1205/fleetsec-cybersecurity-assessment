@@ -1,0 +1,12 @@
+npm notice run app@1.0.0 test
+npm notice run jest --runInBand --runTestsByPath tests/vapt/v01-sqli.test.js
+PASS tests/vapt/v01-sqli.test.js
+  V-01 - SQL Injection (CWE-89)
+    √ demuestra que la consulta vulnerable altera su lógica (3 ms)
+    √ la consulta parametrizada no permite alterar su lógica (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       2 passed, 2 total
+Snapshots:   0 total
+Time:        0.408 s, estimated 1 s
+Ran all test suites within paths "tests/vapt/v01-sqli.test.js".
