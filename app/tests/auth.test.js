@@ -24,6 +24,14 @@ let userToken;
 beforeAll(async () => {
   // Crear las tablas de la base de datos de pruebas.
   initializeDatabase();
+  // Limpiar los datos de ejecuciones anteriores.
+  // Esta conexión utiliza exclusivamente fleetsec.test.db.
+  db.exec(`
+    DELETE FROM audit_logs;
+    DELETE FROM documents;
+    DELETE FROM assets;
+    DELETE FROM users;
+  `);
 
   // Crear usuarios de prueba con contraseñas cifradas.
   const insertUser = db.prepare(`
