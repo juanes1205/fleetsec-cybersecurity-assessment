@@ -1,0 +1,123 @@
+npm notice run app@1.0.0 test
+npm notice run jest --runInBand --runInBand
+POST 200 72.966 ms
+POST 200 72.918 ms
+PASS tests/vapt/v09-idor.test.js
+  ● Console
+
+    console.error
+      ◇ injected env (8) from .env
+
+    [0m[31m[1m>[22m[39m[90m 1 |[39m require([32m"dotenv"[39m)[33m.[39mconfig()[33m;[39m
+     [90m   |[39m                   [31m[1m^[22m[39m
+     [90m 2 |[39m
+     [90m 3 |[39m [36mconst[39m express [33m=[39m require([32m"express"[39m)[33m;[39m
+     [90m 4 |[39m [36mconst[39m helmet [33m=[39m require([32m"helmet"[39m)[33m;[39m[0m
+
+      at W (node_modules/dotenv/dist/index.cjs:6:151)
+      at Object.M [as configDotenv] (node_modules/dotenv/dist/index.cjs:6:1119)
+      at Object.Y [as config] (node_modules/dotenv/dist/index.cjs:6:1226)
+      at Object.config (src/app.js:1:19)
+      at Object.require (tests/vapt/v09-idor.test.js:7:13)
+
+    console.log
+      {"timestamp":"2026-11-27T17:37:07.491Z","level":"info","message":"Database schema initialized successfully"}
+
+      at log (src/utils/secure-logger.js:23:11)
+
+GET 200 0.784 ms
+GET 404 0.497 ms
+GET 401 0.166 ms
+GET 404 0.417 ms
+POST 200 71.861 ms
+POST 200 71.813 ms
+POST 200 66.762 ms
+PASS tests/auth.test.js
+  ● Console
+
+    console.error
+      ◇ injected env (8) from .env
+
+    [0m[31m[1m>[22m[39m[90m 1 |[39m require([32m"dotenv"[39m)[33m.[39mconfig()[33m;[39m
+     [90m   |[39m                   [31m[1m^[22m[39m
+     [90m 2 |[39m
+     [90m 3 |[39m [36mconst[39m express [33m=[39m require([32m"express"[39m)[33m;[39m
+     [90m 4 |[39m [36mconst[39m helmet [33m=[39m require([32m"helmet"[39m)[33m;[39m[0m
+
+      at W (node_modules/dotenv/dist/index.cjs:6:151)
+      at Object.M [as configDotenv] (node_modules/dotenv/dist/index.cjs:6:1119)
+      at Object.Y [as config] (node_modules/dotenv/dist/index.cjs:6:1226)
+      at Object.config (src/app.js:1:19)
+      at Object.require (tests/auth.test.js:7:13)
+
+    console.log
+      {"timestamp":"2026-11-27T17:37:08.009Z","level":"info","message":"Database schema initialized successfully"}
+
+      at log (src/utils/secure-logger.js:23:11)
+
+POST 401 67.043 ms
+GET 200 0.539 ms
+GET 401 0.139 ms
+GET 200 0.407 ms
+GET 403 0.383 ms
+GET 401 0.117 ms
+POST 200 92.916 ms
+POST 401 71.551 ms
+POST 401 68.350 ms
+PASS tests/vapt/v07-auth-integration.test.js
+  ● Console
+
+    console.error
+      ◇ injected env (8) from .env
+
+    [0m[31m[1m>[22m[39m[90m 1 |[39m require([32m"dotenv"[39m)[33m.[39mconfig()[33m;[39m
+     [90m   |[39m                   [31m[1m^[22m[39m
+     [90m 2 |[39m
+     [90m 3 |[39m [36mconst[39m express [33m=[39m require([32m"express"[39m)[33m;[39m
+     [90m 4 |[39m [36mconst[39m helmet [33m=[39m require([32m"helmet"[39m)[33m;[39m[0m
+
+      at W (node_modules/dotenv/dist/index.cjs:6:151)
+      at Object.M [as configDotenv] (node_modules/dotenv/dist/index.cjs:6:1119)
+      at Object.Y [as config] (node_modules/dotenv/dist/index.cjs:6:1226)
+      at Object.config (src/app.js:1:19)
+      at Object.require (tests/vapt/v07-auth-integration.test.js:9:13)
+
+    console.log
+      {"timestamp":"2026-11-27T17:37:08.738Z","level":"info","message":"Database schema initialized successfully"}
+
+      at log (src/utils/secure-logger.js:23:11)
+
+POST 401 66.512 ms
+POST 401 64.558 ms
+POST 429 0.287 ms
+PASS tests/vapt/v07-rate-limiting.test.js
+PASS tests/vapt/v06-path-traversal.test.js
+PASS tests/vapt/v08-logging-pii.test.js
+PASS tests/vapt/v03-ssrf.test.js
+PASS tests/vapt/v02-jwt.test.js
+  ● Console
+
+    console.error
+      ◇ injected env (8) from .env
+
+    [0m[31m[1m>[22m[39m[90m 1 |[39m require([32m"dotenv"[39m)[33m.[39mconfig()[33m;[39m
+     [90m   |[39m                   [31m[1m^[22m[39m
+     [90m 2 |[39m
+     [90m 3 |[39m [36mconst[39m jwt [33m=[39m require([32m"jsonwebtoken"[39m)[33m;[39m
+     [90m 4 |[39m[0m
+
+      at W (node_modules/dotenv/dist/index.cjs:6:151)
+      at Object.M [as configDotenv] (node_modules/dotenv/dist/index.cjs:6:1119)
+      at Object.Y [as config] (node_modules/dotenv/dist/index.cjs:6:1226)
+      at Object.config (tests/vapt/v02-jwt.test.js:1:19)
+
+PASS tests/vapt/v04-xxe.test.js
+PASS tests/vapt/v05-mass-assignment.test.js
+PASS tests/vapt/v10-hardcoded-credentials.test.js
+PASS tests/vapt/v01-sqli.test.js
+
+Test Suites: 12 passed, 12 total
+Tests:       91 passed, 91 total
+Snapshots:   0 total
+Time:        3.92 s
+Ran all test suites.

@@ -1,0 +1,17 @@
+npm notice run app@1.0.0 npx
+npm notice run ^"jest^" tests/vapt/v10-hardcoded-credentials.test.js --runInBand
+PASS tests/vapt/v10-hardcoded-credentials.test.js
+  V-10 - CWE-798: Hardcoded Credentials
+    Implementación vulnerable
+      √ expone una credencial incrustada en el código (1 ms)
+    Implementación segura
+      √ obtiene la credencial desde una variable externa (1 ms)
+      √ rechaza una variable de entorno ausente (12 ms)
+      √ rechaza una variable vacía (3 ms)
+      √ rechaza una configuración inválida (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        0.39 s, estimated 1 s
+Ran all test suites matching tests/vapt/v10-hardcoded-credentials.test.js.
