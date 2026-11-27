@@ -1,0 +1,62 @@
+npm notice run app@1.0.0 test
+npm notice run jest --runInBand
+POST 200 80.109 ms
+POST 200 74.911 ms
+POST 200 79.202 ms
+PASS tests/auth.test.js
+  ● Console
+
+    console.error
+      ◇ injected env (8) from .env
+
+    [0m[31m[1m>[22m[39m[90m 1 |[39m require([32m"dotenv"[39m)[33m.[39mconfig()[33m;[39m
+     [90m   |[39m                   [31m[1m^[22m[39m
+     [90m 2 |[39m
+     [90m 3 |[39m [36mconst[39m express [33m=[39m require([32m"express"[39m)[33m;[39m
+     [90m 4 |[39m [36mconst[39m helmet [33m=[39m require([32m"helmet"[39m)[33m;[39m[0m
+
+      at W (node_modules/dotenv/dist/index.cjs:6:151)
+      at Object.M [as configDotenv] (node_modules/dotenv/dist/index.cjs:6:1119)
+      at Object.Y [as config] (node_modules/dotenv/dist/index.cjs:6:1226)
+      at Object.config (src/app.js:1:19)
+      at Object.require (tests/auth.test.js:7:13)
+
+    console.log
+      Database schema initialized successfully
+
+      at log (src/database.js:68:11)
+
+POST 401 73.838 ms
+GET 200 1.350 ms
+GET 401 0.206 ms
+GET 200 0.505 ms
+GET 403 0.367 ms
+GET 401 0.241 ms
+PASS tests/vapt/v06-path-traversal.test.js
+PASS tests/vapt/v03-ssrf.test.js
+PASS tests/vapt/v02-jwt.test.js
+  ● Console
+
+    console.error
+      ◇ injected env (8) from .env
+
+    [0m[31m[1m>[22m[39m[90m 1 |[39m require([32m"dotenv"[39m)[33m.[39mconfig()[33m;[39m
+     [90m   |[39m                   [31m[1m^[22m[39m
+     [90m 2 |[39m
+     [90m 3 |[39m [36mconst[39m jwt [33m=[39m require([32m"jsonwebtoken"[39m)[33m;[39m
+     [90m 4 |[39m[0m
+
+      at W (node_modules/dotenv/dist/index.cjs:6:151)
+      at Object.M [as configDotenv] (node_modules/dotenv/dist/index.cjs:6:1119)
+      at Object.Y [as config] (node_modules/dotenv/dist/index.cjs:6:1226)
+      at Object.config (tests/vapt/v02-jwt.test.js:1:19)
+
+PASS tests/vapt/v04-xxe.test.js
+PASS tests/vapt/v05-mass-assignment.test.js
+PASS tests/vapt/v01-sqli.test.js
+
+Test Suites: 7 passed, 7 total
+Tests:       67 passed, 67 total
+Snapshots:   0 total
+Time:        1.819 s, estimated 2 s
+Ran all test suites.
