@@ -42,3 +42,8 @@ app/data/*.db-wal
 
 # Dependencies
 app/node_modules/
+
+# Generated CI security reports
+app/reports/*.json
+app/reports/*.sarif
+app/reports/*.html

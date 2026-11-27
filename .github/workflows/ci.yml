@@ -1,0 +1,160 @@
+name: FleetSec Security CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fleetsec-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Automated tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: app
+        run: npm ci
+
+      - name: Run Jest tests
+        working-directory: app
+        run: npm test
+
+  dependency-audit:
+    name: Dependency security audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: app
+        run: npm ci
+
+      - name: Audit all dependencies
+        working-directory: app
+        run: npm audit --audit-level=high
+
+      - name: Audit production dependencies
+        working-directory: app
+        run: npm audit --omit=dev --audit-level=moderate
+
+  secret-scan:
+    name: Secret detection
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout complete Git history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan repository with Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  sast:
+    name: Static application security testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Semgrep
+        run: python -m pip install semgrep
+
+      - name: Create reports directory
+        run: mkdir -p app/reports
+
+      - name: Scan application source
+        working-directory: app
+        run: |
+          semgrep scan \
+            --config p/default \
+            --error \
+            --json \
+            --output reports/semgrep.json \
+            --exclude 'src/vapt/**' \
+            --exclude 'tests/**' \
+            --exclude 'evidence/**' \
+            .
+
+      - name: Upload SAST report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-report
+          path: app/reports/semgrep.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  sbom:
+    name: Software bill of materials
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Generate CycloneDX SBOM
+        working-directory: app
+        run: |
+          mkdir -p reports
+          npx --yes @cyclonedx/cyclonedx-npm \
+            --output-file reports/bom.json \
+            --output-format JSON
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: cyclonedx-sbom
+          path: app/reports/bom.json
+          if-no-files-found: error
+          retention-days: 30
