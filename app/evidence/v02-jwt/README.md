@@ -1,37 +1,44 @@
-# V-02 - JWT / Broken Authentication
+# V-02 - JWT / Autenticación rota
 
-## Vulnerability
+## Vulnerabilidad
 
-CWE-345: Insufficient Verification of Data Authenticity.
+CWE-345: Verificación insuficiente de la autenticidad de los datos.
 
-## Objective
+## Objetivo
 
-Demonstrate the risks of accepting JWT claims without verifying
-the authenticity and integrity of the token.
+Demostrar los riesgos de aceptar las declaraciones (claims) de un
+JSON Web Token (JWT) sin verificar la autenticidad e integridad del token.
 
-## Vulnerable behavior
+## Comportamiento vulnerable
 
-The laboratory function `unsafeDecodeToken()` uses `jwt.decode()`,
-which extracts the token payload without validating its signature.
+La función de laboratorio `unsafeDecodeToken()` utiliza `jwt.decode()`,
+que extrae el contenido del token sin validar su firma.
 
-## Security correction
+Esto permite leer las declaraciones del token sin comprobar que hayan
+sido emitidas por una fuente confiable ni que su contenido sea íntegro.
 
-The production authentication middleware uses `jwt.verify()` with:
+## Corrección de seguridad
 
-- Explicit HS256 algorithm.
-- Configured JWT secret.
-- Issuer validation.
-- Audience validation.
-- Token expiration validation.
-- Validation of required claims.
+El middleware de autenticación de la aplicación utiliza `jwt.verify()`
+con las siguientes validaciones:
 
-## Validation
+- Algoritmo HS256 explícito.
+- Secreto JWT configurado mediante variable de entorno.
+- Validación del emisor (`issuer`).
+- Validación de la audiencia (`audience`).
+- Validación de la expiración del token.
+- Validación de las declaraciones obligatorias.
 
-Eight Jest tests were executed successfully.
+## Validación
 
-See `test-results.txt` for the execution results.
+Se ejecutaron correctamente ocho pruebas automatizadas con Jest.
 
-## Security restriction
+Consulta el archivo `test-results.txt` para revisar los resultados
+de la ejecución.
 
-The vulnerable laboratory implementation is not imported into
-the production application and must not be exposed through an API.
+## Restricciones de seguridad
+
+- La implementación vulnerable del laboratorio no se importa en
+  la aplicación de producción.
+- No debe exponerse mediante ningún endpoint de la API.
+- Su uso está limitado a pruebas locales y controladas.
