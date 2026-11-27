@@ -1,0 +1,23 @@
+npm notice run app@1.0.0 test
+npm notice run jest --runInBand --runTestsByPath tests/vapt/v04-xxe.test.js
+PASS tests/vapt/v04-xxe.test.js
+  V-04 - XXE (CWE-611)
+    Simulación vulnerable
+      √ demuestra la expansión de una entidad externa ficticia (2 ms)
+      √ rechaza recursos ficticios inexistentes (10 ms)
+      √ acepta XML normal sin DTD (1 ms)
+      √ rechaza entradas que no son cadenas (2 ms)
+    Implementación segura con fast-xml-parser
+      √ bloquea documentos que contienen DOCTYPE
+      √ bloquea declaraciones ENTITY
+      √ analiza correctamente documentos XML normales (3 ms)
+      √ rechaza entradas que no son cadenas (1 ms)
+      √ rechaza documentos XML malformados
+      √ rechaza documentos que superan el tamaño máximo
+      √ conserva referencias de entidades predefinidas con processEntities desactivado
+
+Test Suites: 1 passed, 1 total
+Tests:       11 passed, 11 total
+Snapshots:   0 total
+Time:        0.345 s, estimated 1 s
+Ran all test suites within paths "tests/vapt/v04-xxe.test.js".
