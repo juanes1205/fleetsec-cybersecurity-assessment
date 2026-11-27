@@ -39,6 +39,8 @@ jobs:
 
       - name: Run Jest tests
         working-directory: app
+        env:
+          JWT_SECRET: "fleetsec-ci-only-test-secret-not-for-production-2026"
         run: npm test
 
   dependency-audit:
