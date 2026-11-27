@@ -107,25 +107,32 @@ jobs:
       - name: Create reports directory
         run: mkdir -p app/reports
 
-      - name: Scan application source
+      - name: Generate complete SAST report
         working-directory: app
         run: |
           semgrep scan \
             --config p/default \
-            --error \
             --json \
             --output reports/semgrep.json \
-            --exclude 'src/vapt/**' \
-            --exclude 'tests/**' \
-            --exclude 'evidence/**' \
             .
 
-      - name: Upload SAST report
+      - name: Enforce SAST blocking findings
+        working-directory: app
+        run: |
+          semgrep scan \
+            --config p/default \
+            --severity ERROR \
+            --error \
+            --json \
+            --output reports/semgrep-blocking.json \
+            .
+
+      - name: Upload SAST reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: semgrep-report
-          path: app/reports/semgrep.json
+          name: semgrep-reports
+          path: app/reports/semgrep*.json
           if-no-files-found: warn
           retention-days: 14
 
@@ -144,6 +151,10 @@ jobs:
           node-version: 26
           cache: npm
           cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: app
+        run: npm ci
 
       - name: Generate CycloneDX SBOM
         working-directory: app

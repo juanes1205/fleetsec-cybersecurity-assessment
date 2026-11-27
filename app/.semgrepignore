@@ -1,0 +1,9 @@
+# Vulnerable-by-design labs used for the VAPT assessment.
+src/vapt/
+
+# Automated tests and supporting evidence.
+tests/
+evidence/
+
+# Generated security reports.
+reports/
