@@ -1,0 +1,37 @@
+npm notice run app@1.0.0 test
+npm notice run jest --runInBand --runTestsByPath tests/vapt/v07-auth-integration.test.js
+  console.error
+    ◇ injected env (8) from .env
+
+    [0m[31m[1m>[22m[39m[90m 1 |[39m require([32m"dotenv"[39m)[33m.[39mconfig()[33m;[39m
+     [90m   |[39m                   [31m[1m^[22m[39m
+     [90m 2 |[39m
+     [90m 3 |[39m [36mconst[39m express [33m=[39m require([32m"express"[39m)[33m;[39m
+     [90m 4 |[39m [36mconst[39m helmet [33m=[39m require([32m"helmet"[39m)[33m;[39m[0m
+
+      at W (node_modules/dotenv/dist/index.cjs:6:151)
+      at Object.M [as configDotenv] (node_modules/dotenv/dist/index.cjs:6:1119)
+      at Object.Y [as config] (node_modules/dotenv/dist/index.cjs:6:1226)
+      at Object.config (src/app.js:1:19)
+      at Object.require (tests/vapt/v07-auth-integration.test.js:9:13)
+
+  console.log
+    Database schema initialized successfully
+
+      at log (src/database.js:68:11)
+
+POST 200 115.571 ms
+POST 401 101.527 ms
+POST 401 104.079 ms
+POST 401 102.398 ms
+POST 401 104.936 ms
+POST 429 0.417 ms
+PASS tests/vapt/v07-auth-integration.test.js
+  V-07 - Rate Limiting en la API real
+    √ permite login legítimo y bloquea intentos excesivos (607 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        1.717 s, estimated 2 s
+Ran all test suites within paths "tests/vapt/v07-auth-integration.test.js".

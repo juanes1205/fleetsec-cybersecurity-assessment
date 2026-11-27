@@ -1,0 +1,17 @@
+npm notice run app@1.0.0 test
+npm notice run jest --runInBand --runTestsByPath tests/vapt/v07-rate-limiting.test.js
+PASS tests/vapt/v07-rate-limiting.test.js
+  V-07 - Missing Rate Limiting (CWE-307)
+    Endpoint vulnerable
+      √ permite múltiples intentos fallidos sin aplicar limitación (104 ms)
+      √ permite autenticación legítima (17 ms)
+    Endpoint seguro
+      √ permite solicitudes dentro del límite configurado (110 ms)
+      √ bloquea solicitudes que superan el límite con HTTP 429 (44 ms)
+      √ incluye encabezados informativos del rate limiter (10 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        1.941 s
+Ran all test suites within paths "tests/vapt/v07-rate-limiting.test.js".
