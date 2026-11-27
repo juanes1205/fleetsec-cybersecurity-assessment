@@ -1,4 +1,5 @@
 const db = require("./config/database");
+const logger = require("./utils/secure-logger");
 
 function initializeDatabase() {
   db.exec(`
@@ -65,7 +66,7 @@ function initializeDatabase() {
       ON audit_logs(created_at);
   `);
 
-  console.log("Database schema initialized successfully");
+  logger.info("Database schema initialized successfully");
 }
 
 module.exports = {

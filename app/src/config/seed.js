@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { db } = require("../database");
+const logger = require("../utils/secure-logger");
 
 const users = [
   {
@@ -27,7 +28,7 @@ function seedDatabase() {
   for (const user of users) {
     if (!user.password || user.password.length < 12) {
       throw new Error(
-        `Configure una contraseña de al menos 12 caracteres para ${user.email}`,
+        "Configure una contraseña de al menos 12 caracteres para cada usuario inicial",
       );
     }
   }
@@ -113,8 +114,9 @@ function seedDatabase() {
 
     db.exec("COMMIT");
 
-    console.log("Seed completed successfully");
-    console.log("Users created or already existing:", createdUsers);
+    logger.info("Seed completed successfully", {
+      usersProcessed: Object.keys(createdUsers).length,
+    });
   } catch (error) {
     db.exec("ROLLBACK");
     throw error;

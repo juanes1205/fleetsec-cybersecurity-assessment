@@ -4,6 +4,7 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const morgan = require("morgan");
+const logger = require("./utils/secure-logger");
 
 const {
   authenticateToken,
@@ -111,7 +112,9 @@ app.use((err, req, res, next) => {
     });
   }
 
-  console.error("Application error:", err.message);
+  logger.error("Application error", {
+    error: err,
+  });
 
   return res.status(500).json({
     error: "Internal server error",

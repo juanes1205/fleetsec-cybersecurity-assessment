@@ -1,6 +1,7 @@
 const app = require("./app");
 const { initializeDatabase, db } = require("./database");
 const { seedDatabase } = require("./config/seed");
+const logger = require("./utils/secure-logger");
 
 const PORT = process.env.PORT || 3000;
 
@@ -15,16 +16,20 @@ function startServer() {
     }
 
     const server = app.listen(PORT, () => {
-      console.log(`FleetSec API running on port ${PORT}`);
+      logger.info("FleetSec API started", {
+        port: PORT,
+      });
     });
 
     // Cierre controlado.
     const shutdown = (signal) => {
-      console.log(`${signal} received. Shutting down...`);
+      logger.info("Shutdown signal received", {
+        signal,
+      });
 
       server.close(() => {
         db.close();
-        console.log("Database connection closed");
+        logger.info("Database connection closed");
         process.exit(0);
       });
     };
@@ -34,7 +39,9 @@ function startServer() {
 
     return server;
   } catch (error) {
-    console.error("Application startup failed:", error.message);
+    logger.error("Application startup failed", {
+      error,
+    });
     db.close();
     process.exitCode = 1;
   }
