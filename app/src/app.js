@@ -12,6 +12,7 @@ const {
 } = require("./middleware/auth.middleware");
 
 const authRoutes = require("./routes/auth.routes");
+const documentRoutes = require("./routes/document.routes");
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/documents", documentRoutes);
 
 // Ruta exclusiva para administradores.
 app.get(

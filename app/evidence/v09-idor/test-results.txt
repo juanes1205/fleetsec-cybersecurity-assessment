@@ -1,0 +1,45 @@
+npm notice run app@1.0.0 test
+npm notice run jest --runInBand --runTestsByPath tests/vapt/v09-idor.test.js
+  console.error
+    ◇ injected env (8) from .env
+
+    [0m[31m[1m>[22m[39m[90m 1 |[39m require([32m"dotenv"[39m)[33m.[39mconfig()[33m;[39m
+     [90m   |[39m                   [31m[1m^[22m[39m
+     [90m 2 |[39m
+     [90m 3 |[39m [36mconst[39m express [33m=[39m require([32m"express"[39m)[33m;[39m
+     [90m 4 |[39m [36mconst[39m helmet [33m=[39m require([32m"helmet"[39m)[33m;[39m[0m
+
+      at W (node_modules/dotenv/dist/index.cjs:6:151)
+      at Object.M [as configDotenv] (node_modules/dotenv/dist/index.cjs:6:1119)
+      at Object.Y [as config] (node_modules/dotenv/dist/index.cjs:6:1226)
+      at Object.config (src/app.js:1:19)
+      at Object.require (tests/vapt/v09-idor.test.js:7:13)
+
+  console.log
+    {"timestamp":"2026-11-27T16:59:50.709Z","level":"info","message":"Database schema initialized successfully"}
+
+      at log (src/utils/secure-logger.js:23:11)
+
+POST 200 81.207 ms
+POST 200 70.336 ms
+GET 200 1.089 ms
+GET 404 0.617 ms
+GET 401 0.165 ms
+GET 404 0.366 ms
+PASS tests/vapt/v09-idor.test.js
+  V-09 - IDOR (CWE-639)
+    √ should demonstrate unauthorized document access in the vulnerable endpoint (6 ms)
+    √ should deny document access to a non-owner in the secure endpoint (4 ms)
+    √ should allow the document owner to access their document (4 ms)
+    √ should reject requests without authentication (3 ms)
+    √ should return not found for an invalid document identifier (3 ms)
+    √ should allow the owner to access their document through the real API (5 ms)
+    √ should deny access to another user's document through the real API (5 ms)
+    √ should reject unauthenticated access through the real API (3 ms)
+    √ should not reveal documents with invalid identifiers through the real API (4 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       9 passed, 9 total
+Snapshots:   0 total
+Time:        1.525 s, estimated 2 s
+Ran all test suites within paths "tests/vapt/v09-idor.test.js".
