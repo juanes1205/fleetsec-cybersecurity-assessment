@@ -1,0 +1,22 @@
+npm notice run app@1.0.0 test
+npm notice run jest --runInBand --runTestsByPath tests/vapt/v05-mass-assignment.test.js
+PASS tests/vapt/v05-mass-assignment.test.js
+  V-05 - Mass Assignment (CWE-915)
+    Implementación vulnerable
+      √ permite modificar el rol mediante asignación masiva (3 ms)
+    Implementación segura
+      √ permite actualizar los campos autorizados
+      √ impide modificar campos sensibles
+      √ ignora propiedades no autorizadas
+      √ no modifica el objeto original (1 ms)
+    Validación de entradas
+      √ rechaza un usuario inválido (23 ms)
+      √ rechaza datos de entrada nulos
+      √ rechaza arreglos como datos de entrada
+      √ rechaza arreglos como usuario
+
+Test Suites: 1 passed, 1 total
+Tests:       9 passed, 9 total
+Snapshots:   0 total
+Time:        0.624 s, estimated 1 s
+Ran all test suites within paths "tests/vapt/v05-mass-assignment.test.js".
