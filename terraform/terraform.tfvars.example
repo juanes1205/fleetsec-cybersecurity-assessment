@@ -1,0 +1,19 @@
+aws_region                      = "us-east-1"
+aws_account_id                  = "123456789012"
+project_name                    = "fleetsec"
+environment                     = "production"
+owner                           = "FleetSec-Cybersecurity"
+vpc_cidr                        = "10.0.0.0/16"
+availability_zones              = ["us-east-1a", "us-east-1b"]
+database_name                   = "fleetsec"
+database_instance_class         = "db.t3.micro"
+database_backup_retention_days  = 7
+database_password_rotation_days = 30
+object_lock_retention_days      = 365
+allowed_countries               = ["CO", "PE", "US"]
+auth_rate_limit                 = 1000
+
+tags = {
+  Organization = "FleetSec S.A.S."
+  Compliance   = "ISO-27001-Ley1581"
+}
