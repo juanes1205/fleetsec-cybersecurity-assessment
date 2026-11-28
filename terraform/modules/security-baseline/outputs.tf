@@ -83,3 +83,18 @@ output "security_alerts_sns_topic_arn" {
   description = "ARN of the SNS topic for security alarms"
   value       = aws_sns_topic.security_alerts.arn
 }
+
+output "guardduty_detector_id" {
+  description = "The ID of the GuardDuty detector"
+  value       = aws_guardduty_detector.main.id
+}
+
+output "config_recorder_id" {
+  description = "The ID of the AWS Config configuration recorder"
+  value       = aws_config_configuration_recorder.main.id
+}
+
+output "securityhub_account_id" {
+  description = "The ID of the AWS Security Hub account"
+  value       = aws_securityhub_account.main.id
+}
