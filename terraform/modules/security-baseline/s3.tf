@@ -104,7 +104,29 @@ resource "aws_s3_bucket_object_lock_configuration" "audit" {
   ]
 }
 
-data "aws_iam_policy_document" "audit_flow_logs" {
+data "aws_iam_policy_document" "audit_policy" {
+  statement {
+    sid    = "EnforceTLSRequestsOnly"
+    effect = "Deny"
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    actions = ["s3:*"]
+    resources = [
+      aws_s3_bucket.audit.arn,
+      "${aws_s3_bucket.audit.arn}/*"
+    ]
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values   = ["false"]
+    }
+  }
+
   statement {
     sid    = "AllowVPCFlowLogsBucketAcl"
     effect = "Allow"
@@ -163,9 +185,97 @@ data "aws_iam_policy_document" "audit_flow_logs" {
       values   = ["bucket-owner-full-control"]
     }
   }
+
+  statement {
+    sid    = "AllowCloudTrailAcl"
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+
+    actions   = ["s3:GetBucketAcl"]
+    resources = [aws_s3_bucket.audit.arn]
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [var.aws_account_id]
+    }
+  }
+
+  statement {
+    sid    = "AllowCloudTrailWrite"
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["cloudtrail.amazonaws.com"]
+    }
+
+    actions   = ["s3:PutObject"]
+    resources = ["${aws_s3_bucket.audit.arn}/cloudtrail/*"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "s3:x-amz-acl"
+      values   = ["bucket-owner-full-control"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [var.aws_account_id]
+    }
+  }
+
+  statement {
+    sid    = "AllowConfigAcl"
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["config.amazonaws.com"]
+    }
+
+    actions   = ["s3:GetBucketAcl", "s3:ListBucket"]
+    resources = [aws_s3_bucket.audit.arn]
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [var.aws_account_id]
+    }
+  }
+
+  statement {
+    sid    = "AllowConfigWrite"
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["config.amazonaws.com"]
+    }
+
+    actions   = ["s3:PutObject"]
+    resources = ["${aws_s3_bucket.audit.arn}/config/*"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "s3:x-amz-acl"
+      values   = ["bucket-owner-full-control"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [var.aws_account_id]
+    }
+  }
 }
 
 resource "aws_s3_bucket_policy" "audit" {
   bucket = aws_s3_bucket.audit.id
-  policy = data.aws_iam_policy_document.audit_flow_logs.json
+  policy = data.aws_iam_policy_document.audit_policy.json
 }

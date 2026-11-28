@@ -73,3 +73,13 @@ output "ecs_execution_role_arn" {
   description = "ARN of the ECS task execution IAM role"
   value       = aws_iam_role.ecs_execution.arn
 }
+
+output "cloudtrail_arn" {
+  description = "ARN of the central CloudTrail audit trail"
+  value       = aws_cloudtrail.main.arn
+}
+
+output "security_alerts_sns_topic_arn" {
+  description = "ARN of the SNS topic for security alarms"
+  value       = aws_sns_topic.security_alerts.arn
+}

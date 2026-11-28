@@ -57,6 +57,54 @@ resource "aws_kms_key" "service" {
               "aws:SourceArn" = "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:*"
             }
           }
+        },
+        {
+          Sid    = "AllowCloudTrailS3Encryption"
+          Effect = "Allow"
+
+          Principal = {
+            Service = "cloudtrail.amazonaws.com"
+          }
+
+          Action = [
+            "kms:GenerateDataKey*",
+            "kms:Decrypt",
+            "kms:DescribeKey"
+          ]
+
+          Resource = "*"
+
+          Condition = {
+            StringEquals = {
+              "aws:SourceAccount" = var.aws_account_id
+            }
+
+            ArnLike = {
+              "aws:SourceArn" = "arn:aws:cloudtrail:${var.aws_region}:${var.aws_account_id}:trail/*"
+            }
+          }
+        },
+        {
+          Sid    = "AllowConfigS3Encryption"
+          Effect = "Allow"
+
+          Principal = {
+            Service = "config.amazonaws.com"
+          }
+
+          Action = [
+            "kms:GenerateDataKey*",
+            "kms:Decrypt",
+            "kms:DescribeKey"
+          ]
+
+          Resource = "*"
+
+          Condition = {
+            StringEquals = {
+              "aws:SourceAccount" = var.aws_account_id
+            }
+          }
         }
       ] : [],
 
@@ -84,8 +132,8 @@ resource "aws_kms_key" "service" {
               "aws:SourceAccount" = var.aws_account_id
             }
 
-            ArnEquals = {
-              "kms:EncryptionContext:aws:logs:arn" = "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/fleetsec/${var.environment}/vpc-flow-logs"
+            ArnLike = {
+              "kms:EncryptionContext:aws:logs:arn" = "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/fleetsec/${var.environment}/*"
             }
           }
         }
