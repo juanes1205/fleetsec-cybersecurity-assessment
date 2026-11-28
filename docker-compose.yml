@@ -1,0 +1,45 @@
+name: fleetsec-platform
+
+services:
+  api:
+    container_name: fleetsec-api
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    image: fleetsec/telemetry-api:1.0.0
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - SEED_ON_STARTUP=true
+      - SEED_ADMIN_PASSWORD=FleetSecAdmin2026!SecureKey
+      - SEED_ANALYST_PASSWORD=FleetSecAnalyst2026!SecureKey
+      - SEED_USER_PASSWORD=FleetSecUser2026!SecureKey
+      - JWT_SECRET=super-secure-production-jwt-secret-fleetsec-2026-key!
+      - JWT_EXPIRES_IN=1h
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:5173
+    volumes:
+      - fleetsec-db-data:/usr/src/app/data
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  fleetsec-db-data:
+    name: fleetsec-db-data
+    driver: local
