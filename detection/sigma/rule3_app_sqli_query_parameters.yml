@@ -1,0 +1,56 @@
+title: SQL Injection Patterns in Application Query Parameters
+id: 87dae421-2a10-4567-9c8f-123456789abc
+status: test
+description: |
+  Detects classical and advanced SQL injection (SQLi) patterns and payloads transmitted in HTTP GET/POST 
+  query parameters and request bodies within application web logs.
+  Matches vulnerability V-01 (CWE-89) evaluated during FleetSec's VAPT assessment.
+references:
+  - https://owasp.org/www-community/attacks/SQL_Injection
+  - https://attack.mitre.org/techniques/T1190/
+author: FleetSec Cybersecurity Engineering Team
+date: 2026/11/28
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - cwe.89
+  - owasp.a03_2021_injection
+logsource:
+  category: application
+  product: fleetsec_telemetry_app
+detection:
+  keywords_tautology:
+    - "' OR '"
+    - "' or '"
+    - "' OR 1=1"
+    - "' or 1=1"
+    - "' OR '1'='1"
+    - "admin'--"
+    - "' or true--"
+  keywords_union:
+    - "UNION SELECT"
+    - "UNION ALL SELECT"
+    - "union select"
+    - "union all select"
+  keywords_schema_leak:
+    - "INFORMATION_SCHEMA"
+    - "information_schema.tables"
+    - "information_schema.columns"
+    - "pg_catalog"
+    - "pg_tables"
+    - "sqlite_master"
+  keywords_stacked_queries:
+    - "'; DROP TABLE"
+    - "'; drop table"
+    - "'; TRUNCATE"
+    - "'; DELETE FROM"
+  keywords_time_based:
+    - "pg_sleep("
+    - "WAITFOR DELAY"
+    - "SLEEP("
+    - "BENCHMARK("
+  condition: 1 of keywords_*
+falsepositives:
+  - Legitimate driver or partner names containing apostrophes (e.g., O'Reilly, D'Angelo). In secure applications, parameterized queries handle these without triggering query syntax errors.
+  - Authorized dynamic application security testing (DAST / Semgrep / ZAP) in staging environments.
+level: high

@@ -1,0 +1,30 @@
+title: Anomalous High-Volume S3 Bulk GetObject Calls
+id: 9a23b45c-6789-4def-0123-abcdef456789
+status: test
+description: |
+  Detects anomalous high-volume S3 GetObject operations originating from a single IAM principal targeting 
+  the same S3 bucket within a 5-minute window (>100 calls).
+  This rule directly detects the behavior witnessed during the FleetSec breach where the adversary executed
+  387 GetObject calls in 8 minutes on bucket 'fleetpay-prod-drivers' to exfiltrate 45.7 GB of sensitive PII.
+references:
+  - https://docs.aws.amazon.com/AmazonS3/latest/userguide/cloudtrail-logging.html
+  - https://attack.mitre.org/techniques/T1530/
+author: FleetSec Cybersecurity Engineering Team
+date: 2026/11/28
+tags:
+  - attack.collection
+  - attack.exfiltration
+  - attack.t1530
+logsource:
+  product: aws
+  service: s3
+detection:
+  selection:
+    eventSource: s3.amazonaws.com
+    eventName: GetObject
+  timeframe: 5m
+  condition: selection | count() by userIdentity.arn, requestParameters.bucketName > 100
+falsepositives:
+  - Legitimate bulk data migration, backup or analytics workflows (e.g., AWS Glue, Athena, DataSync).
+    These workloads must run under designated IAM service roles with explicit baseline documentation.
+level: high
