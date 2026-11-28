@@ -3,22 +3,22 @@
 **Incidente:** Compromiso de Credenciales de Servicio y Exfiltración Masiva de Datos de Flota  
 **Fecha de Detección:** T+02:00 UTC  
 **Severidad Global:** CRÍTICA (Breach Activo con Exfiltración Confirmada de 45.7 GB / ~49 GB de Datos Personales)  
-**Marco Legal:** Ley 1581 de 2012 (Colombia) / ISO 27001:2022  
+**Marco Legal:** Ley 1581 de 2012 (Colombia) / ISO 27001:2022
 
 ---
 
 ## 1. Tabla Consolidada de Indicadores de Compromiso (IOCs)
 
-| Tipo | Indicador / Valor | Contexto en la Línea de Tiempo | Confianza | Clasificación TLP |
-|---|---|---|:---:|:---:|
-| **IPv4 Externa** | `185.220.101.22` | IP de origen del login no autorizado a la consola (T+00:00) y destino del túnel de exfiltración de 49 GB (T+01:10). | Alta | TLP:CLEAR |
-| **IPv4 Interna** | `10.0.2.45` | Host privado en subred `app` que originó la sesión saliente TCP/39201 hacia la IP del atacante. | Alta | TLP:AMBER |
-| **Identidad IAM** | `svc-monitoring` | Usuario de servicio programático comprometido. Se le habilitó consola interactiva y privilegios de `AdministratorAccess`. | Alta | TLP:AMBER |
-| **Instancia EC2** | `i-0abc1234def56789` | Instancia comprometida ejecutando malware de exfiltración de datos vía tunelización DNS (`Trojan:EC2/DNSDataExfiltration`). | Alta | TLP:AMBER |
-| **Imagen Docker** | `docker.io/attacker/exfil:latest` | Contenedor registrado como Task Definition en ECS Producción para persistencia y backdoor. | Alta | TLP:CLEAR |
-| **Recurso S3** | `fleetpay-prod-drivers` | Bucket de producción conteniendo información sensible de conductores de flota y pagos. Víctima de 387 `s3:GetObject` en 8 min. | Alta | TLP:AMBER |
-| **Llave KMS CMK** | `prod-data-key` | Llave Customer Managed Key vulnerada para descifrar los payloads descargados (12 llamadas `kms:Decrypt`). | Alta | TLP:AMBER |
-| **Llamada de API** | `cloudtrail:DeleteTrail` | Intento explícito de borrar el rastro de auditoría a T+01:45 (bloqueado por Service Control Policy - SCP). | Alta | TLP:AMBER |
+| Tipo               | Indicador / Valor                 | Contexto en la Línea de Tiempo                                                                                                 | Confianza | Clasificación TLP |
+| ------------------ | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | :-------: | :---------------: |
+| **IPv4 Externa**   | `185.220.101.22`                  | IP de origen del login no autorizado a la consola (T+00:00) y destino del túnel de exfiltración de 49 GB (T+01:10).            |   Alta    |     TLP:CLEAR     |
+| **IPv4 Interna**   | `10.0.2.45`                       | Host privado en subred `app` que originó la sesión saliente TCP/39201 hacia la IP del atacante.                                |   Alta    |     TLP:AMBER     |
+| **Identidad IAM**  | `svc-monitoring`                  | Usuario de servicio programático comprometido. Se le habilitó consola interactiva y privilegios de `AdministratorAccess`.      |   Alta    |     TLP:AMBER     |
+| **Instancia EC2**  | `i-0abc1234def56789`              | Instancia comprometida ejecutando malware de exfiltración de datos vía tunelización DNS (`Trojan:EC2/DNSDataExfiltration`).    |   Alta    |     TLP:AMBER     |
+| **Imagen Docker**  | `docker.io/attacker/exfil:latest` | Contenedor registrado como Task Definition en ECS Producción para persistencia y backdoor.                                     |   Alta    |     TLP:CLEAR     |
+| **Recurso S3**     | `fleetpay-prod-drivers`           | Bucket de producción conteniendo información sensible de conductores de flota y pagos. Víctima de 387 `s3:GetObject` en 8 min. |   Alta    |     TLP:AMBER     |
+| **Llave KMS CMK**  | `prod-data-key`                   | Llave Customer Managed Key vulnerada para descifrar los payloads descargados (12 llamadas `kms:Decrypt`).                      |   Alta    |     TLP:AMBER     |
+| **Llamada de API** | `cloudtrail:DeleteTrail`          | Intento explícito de borrar el rastro de auditoría a T+01:45 (bloqueado por Service Control Policy - SCP).                     |   Alta    |     TLP:AMBER     |
 
 ---
 
@@ -26,20 +26,21 @@
 
 ### IOC Externo Principal: `185.220.101.22`
 
-| Fuente | Atributo Enriquecido | Valor / Hallazgo |
-|---|---|---|
-| **Geolocalización** | País / Ciudad / Coordenadas | Alemania (`DE`) / Frankfurt am Main / `50.1109, 8.6821` |
-| **Enrutamiento / ASN** | Sistema Autónomo | **AS 213151** (Zwiebelfreunde e.V. / Calyx Institute / Tor Network Exit Nodes) |
-| **Tipo de Infraestructura** | Categoría de Red | **Tor Exit Node Activo** (verificado en la lista oficial de consensos de Tor Project) |
-| **AbuseIPDB** | Reputación & Nivel de Confianza | **100% Abuse Confidence Score** (Más de 1,200 reportes en las últimas 72 horas por scanning, brute-force y explotación web) |
-| **VirusTotal** | Detección de Motores de Seguridad | **14/92 motores marcan la IP como Maliciosa / Spam / Tor Proxy** (CrowdSec, AlienVault, Fortinet, CyRadar) |
-| **Shodan** | Servicios y Puertos Expuestos | Puertos `443/tcp` (HTTPS / Tor ORPort), `9001/tcp` (Tor relay), Certificado autofirmado rotativo de Tor |
-| **MISP / AlienVault OTX** | Feeds Comunitarios | Asociado a pulsos: *Tor Exit Nodes Dynamic Feed*, *APT Anonymous Proxy Infrastructure*, *Active Brute-Force & Credential Stuffing Campaign* |
+| Fuente                      | Atributo Enriquecido              | Valor / Hallazgo                                                                                                                            |
+| --------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Geolocalización**         | País / Ciudad / Coordenadas       | Alemania (`DE`) / Frankfurt am Main / `50.1109, 8.6821`                                                                                     |
+| **Enrutamiento / ASN**      | Sistema Autónomo                  | **AS 213151** (Zwiebelfreunde e.V. / Calyx Institute / Tor Network Exit Nodes)                                                              |
+| **Tipo de Infraestructura** | Categoría de Red                  | **Tor Exit Node Activo** (verificado en la lista oficial de consensos de Tor Project)                                                       |
+| **AbuseIPDB**               | Reputación & Nivel de Confianza   | **100% Abuse Confidence Score** (Más de 1,200 reportes en las últimas 72 horas por scanning, brute-force y explotación web)                 |
+| **VirusTotal**              | Detección de Motores de Seguridad | **14/92 motores marcan la IP como Maliciosa / Spam / Tor Proxy** (CrowdSec, AlienVault, Fortinet, CyRadar)                                  |
+| **Shodan**                  | Servicios y Puertos Expuestos     | Puertos `443/tcp` (HTTPS / Tor ORPort), `9001/tcp` (Tor relay), Certificado autofirmado rotativo de Tor                                     |
+| **MISP / AlienVault OTX**   | Feeds Comunitarios                | Asociado a pulsos: _Tor Exit Nodes Dynamic Feed_, _APT Anonymous Proxy Infrastructure_, _Active Brute-Force & Credential Stuffing Campaign_ |
 
 ### Análisis de la Imagen Maliciosa: `docker.io/attacker/exfil:latest`
-* **Repositorio:** Docker Hub público (`registry-1.docker.io/attacker/exfil`).
-* **Función táctica:** Herramienta de exfiltración continua y tunelización inversa C2 (Command & Control).
-* **Riesgo:** El atacante buscaba establecer persistencia dentro del clúster de producción ECS mediante `ecs:RegisterTaskDefinition`, lo que habría permitido la reconexión automatizada en caso de rotación de credenciales.
+
+- **Repositorio:** Docker Hub público (`registry-1.docker.io/attacker/exfil`).
+- **Función táctica:** Herramienta de exfiltración continua y tunelización inversa C2 (Command & Control).
+- **Riesgo:** El atacante buscaba establecer persistencia dentro del clúster de producción ECS mediante `ecs:RegisterTaskDefinition`, lo que habría permitido la reconexión automatizada en caso de rotación de credenciales.
 
 ---
 
@@ -62,14 +63,14 @@
 ```
 
 1. **Velocidad y Volumen Extremo de Exfiltración:**
-   * S3: 387 llamadas `s3:GetObject` en 8 minutos (48.3 req/min) con descarga de **45.7 GB** (~95.2 MB/s).
-   * Red: Conexión constante de 38 minutos desde `10.0.2.45:39201` transfiriendo **~49 GB** por el puerto 443 directamente hacia la IP del nodo Tor.
+   - S3: 387 llamadas `s3:GetObject` en 8 minutos (48.3 req/min) con descarga de **45.7 GB** (~95.2 MB/s).
+   - Red: Conexión constante de 38 minutos desde `10.0.2.45:39201` transfiriendo **~49 GB** por el puerto 443 directamente hacia la IP del nodo Tor.
 2. **Ventana Horaria Estratégica:**
-   * Actividad iniciada a las **00:00 UTC** (madrugada en operaciones locales de flota), diseñada para evadir la supervisión de turnos regulares de soporte.
+   - Actividad iniciada a las **00:00 UTC** (madrugada en operaciones locales de flota), diseñada para evadir la supervisión de turnos regulares de soporte.
 3. **Evasión y Destrucción de Evidencia (Anti-Forensics):**
-   * El atacante intentó ejecutar `cloudtrail:DeleteTrail` para borrar el historial forense y dificultar el cálculo del alcance de la brecha. Afortunadamente, una Service Control Policy (SCP) en la raíz de AWS Organizations impidió la eliminación.
+   - El atacante intentó ejecutar `cloudtrail:DeleteTrail` para borrar el historial forense y dificultar el cálculo del alcance de la brecha. Afortunadamente, una Service Control Policy (SCP) en la raíz de AWS Organizations impidió la eliminación.
 4. **Técnica de Canal Encubierto (DNS Data Exfiltration):**
-   * Tras notar el posible bloqueo o saturación de ancho de banda, la instancia `i-0abc1234def56789` comenzó a exfiltrar registros comprimidos mediante consultas DNS codificadas hacia servidores DNS autoritativos controlados por el atacante.
+   - Tras notar el posible bloqueo o saturación de ancho de banda, la instancia `i-0abc1234def56789` comenzó a exfiltrar registros comprimidos mediante consultas DNS codificadas hacia servidores DNS autoritativos controlados por el atacante.
 
 ---
 
