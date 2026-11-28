@@ -98,3 +98,13 @@ output "securityhub_account_id" {
   description = "The ID of the AWS Security Hub account"
   value       = aws_securityhub_account.main.id
 }
+
+output "waf_web_acl_arn" {
+  description = "ARN of the WAFv2 Web ACL"
+  value       = aws_wafv2_web_acl.main.arn
+}
+
+output "waf_web_acl_id" {
+  description = "ID of the WAFv2 Web ACL"
+  value       = aws_wafv2_web_acl.main.id
+}
