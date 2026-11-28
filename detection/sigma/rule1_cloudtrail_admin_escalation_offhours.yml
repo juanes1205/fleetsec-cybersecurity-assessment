@@ -1,0 +1,40 @@
+title: IAM Administrator Policy Attached to User During Off-Hours
+id: c38b7e21-995b-4b2a-8bf3-5c8e4414ad77
+status: test
+description: |
+  Detects the attachment of the high-privilege 'AdministratorAccess' AWS managed policy to an IAM user 
+  or role outside standard business operating hours (specifically between 00:00 and 06:00 UTC).
+  This pattern was observed during the FleetSec breach where the compromised 'svc-monitoring' service account
+  was escalated to complete control at T+00:22 UTC.
+references:
+  - https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-aws-console-sign-in-events.html
+  - https://attack.mitre.org/techniques/T1098/
+author: FleetSec Cybersecurity Engineering Team
+date: 2026/11/28
+tags:
+  - attack.privilege_escalation
+  - attack.persistence
+  - attack.t1098
+  - attack.t1078.004
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection_action:
+    eventSource: iam.amazonaws.com
+    eventName:
+      - AttachUserPolicy
+      - AttachRolePolicy
+      - PutUserPolicy
+      - PutRolePolicy
+  selection_admin_policy:
+    requestParameters.policyArn|endswith:
+      - AdministratorAccess
+      - PowerUserAccess
+      - arn:aws:iam::aws:policy/AdministratorAccess
+  selection_off_hours:
+    eventTime|re: 'T0[0-5]:[0-9]{2}:[0-9]{2}'
+  condition: selection_action and selection_admin_policy and selection_off_hours
+falsepositives:
+  - Emergency break-glass access invoked by authorized On-Call Incident Commanders via designated JIT ticketing workflows.
+level: high

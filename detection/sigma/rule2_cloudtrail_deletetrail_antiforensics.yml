@@ -1,0 +1,29 @@
+title: Attempted CloudTrail Audit Trail Deletion (Anti-Forensics)
+id: f184a56e-8123-4567-9abc-df0123456789
+status: stable
+description: |
+  Detects attempts to delete or stop AWS CloudTrail audit trails, which attackers use as an anti-forensics
+  technique to blind security monitoring and incident response capabilities before data exfiltration.
+  In the FleetSec incident, the adversary attempted 'cloudtrail:DeleteTrail' at T+01:45 UTC, which was blocked by SCP.
+references:
+  - https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_DeleteTrail.html
+  - https://attack.mitre.org/techniques/T1562/008/
+author: FleetSec Cybersecurity Engineering Team
+date: 2026/11/28
+tags:
+  - attack.defense_evasion
+  - attack.t1562.008
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: cloudtrail.amazonaws.com
+    eventName:
+      - DeleteTrail
+      - StopLogging
+      - UpdateTrail
+  condition: selection
+falsepositives:
+  - Extremely rare in production environments. Planned decommissioning of an AWS account by the Lead Cloud Architect with pre-approved change order ticket.
+level: critical
